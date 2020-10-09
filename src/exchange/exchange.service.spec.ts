@@ -8,7 +8,7 @@ describe('ExchangeService', () => {
 
   beforeEach(async () => {
     const currenciesServiceMock = {
-      getCurrency: jest.fn(),
+      getCurrency: jest.fn().mockReturnValue({ value: 1 }),
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -54,6 +54,25 @@ describe('ExchangeService', () => {
       await expect(
         service.convertAmount({ from: 'INVALID', to: 'BRL', amount: 1 }),
       ).rejects.toThrow();
+    });
+
+    it('should be return conversion value', async () => {
+      (currenciesService.getCurrency as jest.Mock).mockResolvedValue({ value: 1 });
+      expect(await service.convertAmount({ from: 'USD', to: 'USD', amount: 1 })).toEqual({
+        amount: 1,
+      });
+
+      (currenciesService.getCurrency as jest.Mock).mockResolvedValueOnce({ value: 1 });
+      (currenciesService.getCurrency as jest.Mock).mockResolvedValueOnce({ value: 0.2 });
+      expect(await service.convertAmount({ from: 'USD', to: 'BRL', amount: 1 })).toEqual({
+        amount: 5,
+      });
+
+      (currenciesService.getCurrency as jest.Mock).mockResolvedValueOnce({ value: 0.2 });
+      (currenciesService.getCurrency as jest.Mock).mockResolvedValueOnce({ value: 1 });
+      expect(await service.convertAmount({ from: 'BRL', to: 'USD', amount: 1 })).toEqual({
+        amount: 0.2,
+      });
     });
   });
 });
