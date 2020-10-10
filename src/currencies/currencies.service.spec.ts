@@ -33,5 +33,15 @@ describe('CurrenciesService', () => {
     it('should be not throw if repository returns', async () => {
       await expect(service.getCurrency('USD')).resolves.not.toThrow();
     });
+
+    it('should be called repository with correct params', async () => {
+      await service.getCurrency('USD');
+      expect(repository.getCurrency).toBeCalledWith('USD');
+    });
+
+    it('should be return when repository return', async () => {
+      (repository.getCurrency as jest.Mock).mockReturnValue({ currency: 'USD', value: 1 });
+      expect(await service.getCurrency('USD')).toEqual({ currency: 'USD', value: 1 });
+    });
   });
 });
