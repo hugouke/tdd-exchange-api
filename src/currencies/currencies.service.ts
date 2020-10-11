@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 
 export class Currencies {
   currency: string;
-  value: string;
+  value: number;
 }
 
 export class CurrenciesRepository {
@@ -11,6 +11,10 @@ export class CurrenciesRepository {
   }
 
   async createCurrency({ currency, value }): Promise<Currencies> {
+    return new Currencies();
+  }
+
+  async updateCurrency({ currency, value }): Promise<Currencies> {
     return new Currencies();
   }
 }
@@ -28,5 +32,12 @@ export class CurrenciesService {
       throw new BadRequestException('The value must be greater zero.');
     }
     return await this.currenciesRepository.createCurrency({ currency, value });
+  }
+
+  async updateCurrency({ currency, value }): Promise<Currencies> {
+    if (value <= 0) {
+      throw new BadRequestException('The value must be greater zero.');
+    }
+    return await this.currenciesRepository.updateCurrency({ currency, value });
   }
 }
