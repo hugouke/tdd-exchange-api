@@ -5,6 +5,7 @@ import { Currencies } from './currencies.entity';
 
 describe('CurrenciesRepository', () => {
   let repository;
+  let mockData;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -12,6 +13,7 @@ describe('CurrenciesRepository', () => {
     }).compile();
 
     repository = module.get<CurrenciesRepository>(CurrenciesRepository);
+    mockData = { currency: 'USD', value: 1 } as Currencies;
   });
 
   it('should be defined', () => {
@@ -33,17 +35,38 @@ describe('CurrenciesRepository', () => {
     });
 
     it('should be returns when findOne returns', async () => {
-      const mockData = { currency: 'USD', value: 1 } as Currencies;
       repository.findOne = jest.fn().mockReturnValue(mockData);
       expect(await repository.getCurrency('USD')).toEqual(mockData);
     });
   });
 
   describe('createCurrency()', () => {
-    it('should be called findOne with correct params', async () => {
-      repository.findOne = jest.fn().mockReturnValue({});
-      await repository.getCurrency('USD');
-      expect(repository.findOne).toBeCalledWith({ currency: 'USD' });
+    beforeEach(() => {
+      repository.save = jest.fn();
+    });
+
+    it('should be called save with correct params', async () => {
+      repository.save = jest.fn().mockReturnValue(mockData);
+      await repository.createCurrency(mockData);
+      expect(repository.save).toBeCalledWith(mockData);
+    });
+
+    it('should be throw when save throw', async () => {
+      repository.save = jest.fn().mockRejectedValue(new Error());
+      await expect(repository.createCurrency(mockData)).rejects.toThrow();
+    });
+
+    it('should be throw if called with invalid params', async () => {
+      mockData.currency = 'INVALID';
+      await expect(repository.createCurrency(mockData)).rejects.toThrow();
+
+      mockData.currency = 'USD';
+      mockData.value = 'INVALID';
+      await expect(repository.createCurrency(mockData)).rejects.toThrow();
+    });
+
+    it('should be returns created data', async () => {
+      expect(await repository.createCurrency(mockData)).toEqual(mockData);
     });
   });
 });
