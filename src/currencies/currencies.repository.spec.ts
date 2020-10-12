@@ -38,4 +38,12 @@ describe('CurrenciesRepository', () => {
       expect(await repository.getCurrency('USD')).toEqual(mockData);
     });
   });
+
+  describe('createCurrency()', () => {
+    it('should be called findOne with correct params', async () => {
+      repository.findOne = jest.fn().mockReturnValue({});
+      await repository.getCurrency('USD');
+      expect(repository.findOne).toBeCalledWith({ currency: 'USD' });
+    });
+  });
 });
