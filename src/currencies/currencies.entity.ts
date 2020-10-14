@@ -24,7 +24,6 @@ export class Currencies {
   @Column()
   @IsNotEmpty()
   @IsNumber()
-  @Type(() => Number)
   value: number;
 
   @CreateDateColumn({ type: 'timestamp' })
