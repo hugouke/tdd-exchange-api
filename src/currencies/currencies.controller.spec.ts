@@ -7,6 +7,7 @@ import { CurrenciesService } from './currencies.service';
 describe('CurrenciesController', () => {
   let controller: CurrenciesController;
   let service: CurrenciesService;
+  let mockData;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,6 +17,7 @@ describe('CurrenciesController', () => {
           provide: CurrenciesService,
           useFactory: () => ({
             getCurrency: jest.fn(),
+            createCurrency: jest.fn(),
           }),
         },
       ],
@@ -23,6 +25,7 @@ describe('CurrenciesController', () => {
 
     controller = module.get<CurrenciesController>(CurrenciesController);
     service = module.get<CurrenciesService>(CurrenciesService);
+    mockData = { currency: 'USD', value: 1 } as Currencies;
   });
 
   it('should be defined', () => {
@@ -41,9 +44,25 @@ describe('CurrenciesController', () => {
     });
 
     it('should be returns when service returns', async () => {
-      const mockData = { currency: 'USD', value: 1 } as Currencies;
       (service.getCurrency as jest.Mock).mockReturnValue(mockData);
       expect(await controller.getCurrency('USD')).toEqual(mockData);
+    });
+  });
+
+  describe('createCurrency()', () => {
+    it('should be throw when service throw', async () => {
+      (service.createCurrency as jest.Mock).mockRejectedValue(new BadRequestException());
+      await expect(controller.createCurrency(mockData)).rejects.toThrow(new BadRequestException());
+    });
+
+    it('should be called service with corrects params', async () => {
+      await controller.createCurrency(mockData);
+      expect(service.createCurrency).toBeCalledWith(mockData);
+    });
+
+    it('should be returns when service returns', async () => {
+      (service.createCurrency as jest.Mock).mockReturnValue(mockData);
+      expect(await controller.createCurrency(mockData)).toEqual(mockData);
     });
   });
 });
