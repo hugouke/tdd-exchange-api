@@ -57,10 +57,6 @@ describe('CurrenciesRepository', () => {
     it('should be throw if called with invalid params', async () => {
       mockData.currency = 'INVALID';
       await expect(repository.createCurrency(mockData)).rejects.toThrow();
-
-      mockData.currency = 'USD';
-      mockData.value = 'INVALID';
-      await expect(repository.createCurrency(mockData)).rejects.toThrow();
     });
 
     it('should be returns created data', async () => {
