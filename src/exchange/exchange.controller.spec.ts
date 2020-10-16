@@ -17,7 +17,7 @@ describe('ExchangeController', () => {
 
     controller = module.get<ExchangeController>(ExchangeController);
     service = module.get<ExchangeService>(ExchangeService);
-    mockData = { from: 'INVALID', to: 'INVALID', amount: 1 };
+    mockData = { from: 'USD', to: 'BRL', amount: 1 };
   });
 
   it('should be defined', () => {
@@ -36,7 +36,7 @@ describe('ExchangeController', () => {
       expect(service.convertAmount).toBeCalledWith(mockData);
     });
 
-    it('should be called service with corrects params', async () => {
+    it('should be returns when service returns', async () => {
       const mockReturn = { amount: 1 } as ExchangeType;
       (service.convertAmount as jest.Mock).mockReturnValue(mockReturn);
       expect(await controller.convertAmount(mockData)).toEqual(mockReturn);
