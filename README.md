@@ -19,7 +19,7 @@ $ npm run test
 $ npm run test:cov
 ```
 
-<img src="https://hugo.bz/temp/cov.png" />
+<img src="https://hugo.bz/gitimgs/cov.png" />
 <br/>
 
 ## Endpoints
@@ -31,7 +31,7 @@ GET
 http://localhost/exchange/?from=USD&to=BRL&amount=1
 ```
 
-<img src="https://hugo.bz/temp/get.png" />
+<img src="https://hugo.bz/gitimgs/get.png" />
 
 ### Create Currency
 
@@ -43,7 +43,7 @@ currency=BRL
 value=0.2
 ```
 
-<img src="https://hugo.bz/temp/post.png" />
+<img src="https://hugo.bz/gitimgs/post.png" />
 
 ### Update Currency Value
 
@@ -54,7 +54,7 @@ Put value in body:
 value=0.22
 ```
 
-<img src="https://hugo.bz/temp/update.png" />
+<img src="https://hugo.bz/gitimgs/update.png" />
 
 ### Delete Currency
 
@@ -63,7 +63,7 @@ DELETE
 http://localhost/currencies/BRL
 ```
 
-<img src="https://hugo.bz/temp/delete.png" />
+<img src="https://hugo.bz/gitimgs/delete.png" />
 
 <br/>
 
